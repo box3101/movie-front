@@ -45,7 +45,7 @@ export const movies: Movie[] = [
     isNowPlaying: true,
   },
   {
-    id: 3,
+    id: 31,
     title: '파묘',
     genre: '미스터리',
     rating: 8.8,
