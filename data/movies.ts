@@ -1,17 +1,24 @@
-// 영화 Mock 데이터
+/**
+ * 영화 Mock 데이터
+ * - 실제 API 연동 전까지 사용하는 더미 데이터
+ * - 나중에 API 응답 형식에 맞춰 interface 수정 예정
+ */
+
+// 영화 데이터 타입 정의
 export interface Movie {
-  id: number
-  title: string
-  genre: string
-  rating: number
-  releaseDate: string
-  duration: number
-  director: string
-  description: string
-  poster: string
-  isNowPlaying: boolean
+  id: number // 영화 고유 ID
+  title: string // 영화 제목
+  genre: string // 장르 (액션, SF, 드라마 등)
+  rating: number // 평점 (10점 만점)
+  releaseDate: string // 개봉일 (YYYY-MM-DD)
+  duration: number // 상영시간 (분)
+  director: string // 감독
+  description: string // 영화 소개
+  poster: string // 포스터 이미지 URL
+  isNowPlaying: boolean // 현재 상영중 여부
 }
 
+// 영화 목록 (Mock)
 export const movies: Movie[] = [
   {
     id: 1,
@@ -111,5 +118,5 @@ export const movies: Movie[] = [
   },
 ]
 
-// 장르 목록
+// 장르 목록 (movies에서 중복 제거 후 추출, '전체' 포함)
 export const genres = ['전체', ...new Set(movies.map((m) => m.genre))]
