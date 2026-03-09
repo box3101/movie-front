@@ -1,3 +1,9 @@
 <template>
-  <!-- 과제 1-1: 여기에 레이아웃 만들기 -->
+  <div class="min-h-screen flex flex-col bg-gray-50">
+    <AppHeader />
+    <main class="flex-1 max-w-[1200px] mx-auto px-4">
+      <slot />
+    </main>
+    <AppFooter />
+  </div>
 </template>

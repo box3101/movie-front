@@ -10,6 +10,12 @@ export default defineNuxtConfig({
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
+      link: [
+        {
+          rel: 'stylesheet',
+          href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css',
+        },
+      ],
     },
   },
 })
