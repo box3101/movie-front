@@ -15,3 +15,7 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { movies } from '~/data/movies'
+</script>
