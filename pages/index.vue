@@ -6,7 +6,7 @@
     <div class="grid grid-cols-4 gap-6">
       <NuxtLink
         :to="'/movies/' + movie.id"
-        v-for="movie in filteredMovie"
+        v-for="movie in movies"
         :key="movie.id"
         class="bg-gray-800 rounded-lg overflow-hidden">
         <!-- 포스터 -->
