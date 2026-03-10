@@ -5,7 +5,7 @@
     <!-- 영화 카드 그리드 -->
     <div class="grid grid-cols-4 gap-6">
       <NuxtLink
-        :to="'/movies/' + movie.title"
+        :to="'/movies/' + movie.id"
         v-for="movie in movies"
         :key="movie.id"
         class="bg-gray-800 rounded-lg overflow-hidden">
