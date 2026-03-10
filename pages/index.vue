@@ -6,7 +6,7 @@
     <div class="grid grid-cols-4 gap-6">
       <NuxtLink
         :to="'/movies/' + movie.id"
-        v-for="movie in movies"
+        v-for="movie in filteredMovie"
         :key="movie.id"
         class="bg-gray-800 rounded-lg overflow-hidden">
         <!-- 포스터 -->
@@ -19,3 +19,9 @@
 <script setup lang="ts">
 import { movies } from '~/data/movies'
 </script>
+
+<style>
+.is-active {
+  background: blue;
+}
+</style>
