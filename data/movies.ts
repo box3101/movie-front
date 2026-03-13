@@ -118,5 +118,5 @@ export const movies: Movie[] = [
   },
 ]
 
-// 장르 목록 (movies에서 중복 제거 후 추출, '전체' 포함)
+// <장르> 목록 (movies에서 중복 제거 후 추출, '전체' 포함)
 export const genres = ['전체', ...new Set(movies.map((m) => m.genre))]
