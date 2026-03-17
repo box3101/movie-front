@@ -1,7 +1,9 @@
 <template>
   <div v-if="movie">
     <!-- 뒤로가기 -->
-    <NuxtLink to="/" class="inline-flex items-center text-gray-400 hover:text-white transition mb-6">
+    <NuxtLink
+      to="/"
+      class="inline-flex items-center text-gray-400 hover:text-white transition mb-6">
       ← 목록으로
     </NuxtLink>
 
@@ -12,20 +14,19 @@
         <img
           :src="movie.poster"
           :alt="movie.title"
-          class="w-72 h-[430px] object-cover rounded-lg"
-        />
+          class="w-72 h-[430px] object-cover rounded-lg" />
       </div>
 
       <!-- 정보 -->
       <div class="flex-1">
         <div class="flex items-center gap-3 mb-2">
           <h1 class="text-3xl font-bold">{{ movie.title }}</h1>
-          <span
-            v-if="movie.isNowPlaying"
-            class="px-2 py-0.5 bg-red-600 text-white text-xs rounded"
-          >
+          <span v-if="movie.isNowPlaying" class="px-2 py-0.5 bg-red-600 text-white text-xs rounded">
             상영중
           </span>
+          <button @click="toggleFavorite(movie.id)" class="text-red-500 text-lg">
+            {{ isFavorite(movie.id) ? '♥' : '♡' }}
+          </button>
         </div>
 
         <!-- 평점 -->
@@ -70,6 +71,7 @@
 
 <script setup lang="ts">
 import { movies } from '~/data/movies'
+const { toggleFavorite, isFavorite } = useFavorite()
 
 const route = useRoute()
 const movie = movies.find((m) => m.id === Number(route.params.id))

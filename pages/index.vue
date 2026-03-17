@@ -51,7 +51,12 @@
         class="bg-gray-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-red-500 transition">
         <img :src="movie.poster" :alt="movie.title" class="w-full h-64 object-cover" />
         <div class="p-3">
-          <h3 class="font-semibold">{{ movie.title }}</h3>
+          <div class="flex justify-between items-center">
+            <h3 class="font-semibold">{{ movie.title }}</h3>
+            <button @click.prevent="toggleFavorite(movie.id)" class="text-red-500 text-lg">
+              {{ isFavorite(movie.id) ? '♥' : '♡' }}
+            </button>
+          </div>
           <p class="text-sm text-gray-400">{{ movie.genre }} · ★ {{ movie.rating }}</p>
         </div>
       </NuxtLink>
@@ -66,6 +71,7 @@
 
 <script setup lang="ts">
 import { movies, genres } from '~/data/movies'
+const { toggleFavorite, isFavorite } = useFavorite()
 
 /*
   장르 필터 버튼 클릭 시 선택된 장르 상태 관리
