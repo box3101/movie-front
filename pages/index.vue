@@ -60,6 +60,8 @@
           <p class="text-sm text-gray-400">{{ movie.genre }} · ★ {{ movie.rating }}</p>
         </div>
       </NuxtLink>
+
+      {{ favorites }}
     </div>
 
     <!-- 검색 결과 없음 -->
@@ -71,7 +73,7 @@
 
 <script setup lang="ts">
 import { movies, genres } from '~/data/movies'
-const { toggleFavorite, isFavorite } = useFavorite()
+const { toggleFavorite, isFavorite, favorites } = useFavorite()
 
 /*
   장르 필터 버튼 클릭 시 선택된 장르 상태 관리
