@@ -60,8 +60,6 @@
           <p class="text-sm text-gray-400">{{ movie.genre }} · ★ {{ movie.rating }}</p>
         </div>
       </NuxtLink>
-
-      {{ favorites }}
     </div>
 
     <!-- 검색 결과 없음 -->
