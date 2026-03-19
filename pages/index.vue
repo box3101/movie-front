@@ -9,7 +9,7 @@
       - 선택된 장르에 따라 버튼 스타일 변경 ( :class="selectedGenre === genre ? 'bg-red-600 text-white' : 'bg-gray-700 text-gray-300'" )
       - 장르 버튼 클릭 시 선택된 장르 상태 관리 ( @click="selectedGenre = genre" )
     */ -->
-    <div class="flex gap-2 mb-6">
+    <!-- <div class="flex gap-2 mb-6">
       <button
         v-for="genre in genres"
         :key="genre"
@@ -18,7 +18,7 @@
         class="px-4 py-2 rounded-lg text-sm hover:bg-red-500 hover:text-white transition">
         {{ genre }}
       </button>
-    </div>
+    </div> -->
 
     <div class="flex gap-5">
       <input
@@ -49,7 +49,7 @@
         v-for="movie in filteredMovies"
         :key="movie.id"
         class="bg-gray-800 rounded-lg overflow-hidden hover:ring-2 hover:ring-red-500 transition">
-        <img :src="movie.poster" :alt="movie.title" class="w-full h-64 object-cover" />
+        <img :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" />
         <div class="p-3">
           <div class="flex justify-between items-center">
             <h3 class="font-semibold">{{ movie.title }}</h3>
@@ -57,7 +57,7 @@
               {{ isFavorite(movie.id) ? '♥' : '♡' }}
             </button>
           </div>
-          <p class="text-sm text-gray-400">{{ movie.genre }} · ★ {{ movie.rating }}</p>
+          <p class="text-sm text-gray-400">★ {{ movie.vote_average }}</p>
         </div>
       </NuxtLink>
     </div>
@@ -70,37 +70,44 @@
 </template>
 
 <script setup lang="ts">
-import { movies, genres } from '~/data/movies'
-const { toggleFavorite, isFavorite, favorites } = useFavorite()
+// import { movies, genres } from '~/data/movies'
+const { toggleFavorite, isFavorite } = useFavorite()
+
+// 현재 상영작 목록 조회 함수 호출
+const { fetchNowPlayingMovies } = useMovieApi()
+
+const selectedGenre = ref('전체') // 선택된 장르 상태 관리
+const searchQuery = ref('') // 검색 쿼리 상태 관리
+const sortOrder = ref('rating') // 정렬 순서 상태 관리
+const movies = ref([]) // API에서 받아올 영화 목록
+const isLoading = ref(true) // 로딩 상태
 
 /*
-  장르 필터 버튼 클릭 시 선택된 장르 상태 관리
+    페이지 로드 시 API 호출
 */
-const selectedGenre = ref('전체')
 
-/*
-  영화 제목 검색 쿼리 관리
-*/
-const searchQuery = ref('')
-
-/*
-  영화 정렬 순서 관리
-*/
-const sortOrder = ref('rating')
+onMounted(async () => {
+  const data = await fetchNowPlayingMovies()
+  movies.value = data.results
+  isLoading.value = false
+})
 
 /*
   영화 목록 필터링 + 정렬
   1. 장르 필터 → 2. 검색 필터 → 3. 정렬
 */
 const filteredMovies = computed(() => {
-  return movies
-    .filter((m) => selectedGenre.value === '전체' || m.genre === selectedGenre.value)
-    .filter((m) => m.title.includes(searchQuery.value))
-    .sort((a, b) => {
-      if (sortOrder.value === 'rating') return b.rating - a.rating
-      else if (sortOrder.value === 'title') return a.title.localeCompare(b.title)
-      else if (sortOrder.value === 'releaseDate') return b.releaseDate.localeCompare(a.releaseDate)
-      return 0
-    })
+  return (
+    movies.value
+      // .filter((m) => selectedGenre.value === '전체' || m.genre_ids === selectedGenre.value)
+      .filter((m) => m.title.includes(searchQuery.value))
+      .sort((a, b) => {
+        if (sortOrder.value === 'rating') return b.vote_average - a.vote_average
+        else if (sortOrder.value === 'title') return a.title.localeCompare(b.title)
+        else if (sortOrder.value === 'releaseDate')
+          return b.release_date.localeCompare(a.release_date)
+        return 0
+      })
+  )
 })
 </script>
