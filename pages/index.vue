@@ -62,6 +62,19 @@
       </NuxtLink>
     </div>
 
+    <!-- 페이지네이션 -->
+    <div class="flex gap-2 justify-center mt-8">
+      <button @click="onPageChange(1)" :disabled="currentPage === 1">«</button>
+      <button @click="onPageChange(currentPage - 1)" :disabled="currentPage === 1">←</button>
+      <button v-for="page in pageNumbers" :key="page" @click="onPageChange(page)">
+        {{ page }}
+      </button>
+      <button @click="onPageChange(currentPage + 1)" :disabled="currentPage === totalPages">
+        →
+      </button>
+      <button @click="onPageChange(totalPages)" :disabled="currentPage === totalPages">»</button>
+    </div>
+
     <!-- 검색 결과 없음 -->
     <p v-if="filteredMovies.length === 0" class="text-center text-gray-400 py-10">
       검색 결과가 없습니다.
@@ -81,16 +94,29 @@ const searchQuery = ref('') // 검색 쿼리 상태 관리
 const sortOrder = ref('rating') // 정렬 순서 상태 관리
 const movies = ref([]) // API에서 받아올 영화 목록
 const isLoading = ref(true) // 로딩 상태
+const currentPage = ref(1) // 현재 페이지 번호
+const totalPages = ref(0) // 총 페이지 수
 
 /*
     페이지 로드 시 API 호출
 */
 
 onMounted(async () => {
-  const data = await fetchNowPlayingMovies()
+  const data = await fetchNowPlayingMovies(currentPage.value)
   movies.value = data.results
+  totalPages.value = data.total_pages
   isLoading.value = false
 })
+
+/*
+  페이지 변경 함수
+*/
+
+const onPageChange = async (pageNumber: number) => {
+  currentPage.value = pageNumber
+  const data = await fetchNowPlayingMovies(pageNumber)
+  movies.value = data.results
+}
 
 /*
   영화 목록 필터링 + 정렬
@@ -109,5 +135,19 @@ const filteredMovies = computed(() => {
         return 0
       })
   )
+})
+
+/*
+  페이지 번호 목록
+*/
+const pageNumbers = computed(() => {
+  const pages = []
+  const start = Math.max(1, currentPage.value - 4) // 앞 4개
+  const end = Math.min(totalPages.value, start + 9) // 총 10개
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
 })
 </script>

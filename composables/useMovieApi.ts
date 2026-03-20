@@ -4,13 +4,13 @@ export const useMovieApi = () => {
   const baseUrl = 'https://api.themoviedb.org/3' // TMDB API 기본 URL
 
   // 현재 상영작 목록 조회
-  const fetchNowPlayingMovies = async () => {
+  const fetchNowPlayingMovies = async (pageNumber: number) => {
     const data = await $fetch(`${baseUrl}/movie/now_playing`, {
       // 현재 상영작 목록 조회 API 호출 ( 현재 상영작 목록 조회 )
       params: {
         api_key: apiKey, // API 키 전달
         language: 'ko-KR', // 언어 설정 ( 한국어 )
-        page: 1, // 페이지 번호
+        page: pageNumber, // 페이지 번호
       },
     })
     return data // 현재 상영작 목록 데이터 반환  ( 자동으로 URL 쿼리스트링으로 변환됨 )
