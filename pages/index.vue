@@ -63,16 +63,39 @@
     </div>
 
     <!-- 페이지네이션 -->
-    <div class="flex gap-2 justify-center mt-8">
-      <button @click="onPageChange(1)" :disabled="currentPage === 1">«</button>
-      <button @click="onPageChange(currentPage - 1)" :disabled="currentPage === 1">←</button>
-      <button v-for="page in pageNumbers" :key="page" @click="onPageChange(page)">
+    <div class="flex gap-1 justify-center mt-8">
+      <button
+        @click="onPageChange(1)"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed">
+        «
+      </button>
+      <button
+        @click="onPageChange(currentPage - 1)"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed">
+        ←
+      </button>
+      <button
+        v-for="page in pageNumbers"
+        :key="page"
+        @click="onPageChange(page)"
+        :class="page === currentPage ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'"
+        class="px-3 py-2 rounded-lg min-w-[40px] transition">
         {{ page }}
       </button>
-      <button @click="onPageChange(currentPage + 1)" :disabled="currentPage === totalPages">
+      <button
+        @click="onPageChange(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed">
         →
       </button>
-      <button @click="onPageChange(totalPages)" :disabled="currentPage === totalPages">»</button>
+      <button
+        @click="onPageChange(totalPages)"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-lg bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed">
+        »
+      </button>
     </div>
 
     <!-- 검색 결과 없음 -->
