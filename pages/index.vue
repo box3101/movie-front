@@ -23,7 +23,8 @@
     <div class="flex gap-5">
       <input
         type="text"
-        v-model="searchQuery"
+        :value="searchQuery"
+        @input="searchQuery = ($event.target as HTMLInputElement).value"
         placeholder="영화 제목을 검색하세요"
         class="w-full mb-6 px-4 py-2 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" />
 
@@ -43,7 +44,7 @@
       - 영화 카드 클릭 시 영화 상세 페이지로 이동 ( :to="'/movies/' + movie.id" )
       - 영화 카드 스타일 변경 ( class="bg-gray-800 ... )
     */ -->
-    <div class="grid grid-cols-4 gap-6">
+    <div class="grid grid-cols-4 gap-6 min-h-[600px]">
       <NuxtLink
         :to="'/movies/' + movie.id"
         v-for="movie in filteredMovies"
@@ -63,7 +64,7 @@
     </div>
 
     <!-- 페이지네이션 -->
-    <div class="flex gap-1 justify-center mt-8">
+    <div class="flex gap-1 justify-center mt-8 relative z-10">
       <button
         @click="onPageChange(1)"
         :disabled="currentPage === 1"
@@ -80,7 +81,11 @@
         v-for="page in pageNumbers"
         :key="page"
         @click="onPageChange(page)"
-        :class="page === currentPage ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'"
+        :class="
+          page === currentPage
+            ? 'bg-red-600 text-white'
+            : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+        "
         class="px-3 py-2 rounded-lg min-w-[40px] transition">
         {{ page }}
       </button>
@@ -110,7 +115,7 @@
 const { toggleFavorite, isFavorite } = useFavorite()
 
 // 현재 상영작 목록 조회 함수 호출
-const { fetchNowPlayingMovies } = useMovieApi()
+const { fetchNowPlayingMovies, fetchSearchMovies } = useMovieApi()
 
 const selectedGenre = ref('전체') // 선택된 장르 상태 관리
 const searchQuery = ref('') // 검색 쿼리 상태 관리
@@ -137,10 +142,14 @@ onMounted(async () => {
 
 const onPageChange = async (pageNumber: number) => {
   currentPage.value = pageNumber
-  const data = await fetchNowPlayingMovies(pageNumber)
+  window.scrollTo({ top: 0 }) // 먼저 스크롤 올리고
+  movies.value = [] // 기존 카드 비우고 (클릭 방지)
+  const data = searchQuery.value.trim()
+    ? await fetchSearchMovies(searchQuery.value, pageNumber)
+    : await fetchNowPlayingMovies(pageNumber)
   movies.value = data.results
+  totalPages.value = data.total_pages
 }
-
 /*
   영화 목록 필터링 + 정렬
   1. 장르 필터 → 2. 검색 필터 → 3. 정렬
@@ -149,7 +158,7 @@ const filteredMovies = computed(() => {
   return (
     movies.value
       // .filter((m) => selectedGenre.value === '전체' || m.genre_ids === selectedGenre.value)
-      .filter((m) => m.title.includes(searchQuery.value))
+      // .filter((m) => m.title.includes(searchQuery.value))
       .sort((a, b) => {
         if (sortOrder.value === 'rating') return b.vote_average - a.vote_average
         else if (sortOrder.value === 'title') return a.title.localeCompare(b.title)
@@ -172,5 +181,21 @@ const pageNumbers = computed(() => {
     pages.push(i)
   }
   return pages
+})
+
+//   검색어 있으면 → fetchSearchMovies 호출
+//   타이핑 멈추고 0.3초 후에 api 호출 setTimeout + clearTimeout 조합
+let timer: NodeJS.Timeout // 타이머 저장 변수
+
+watch(searchQuery, (newVal) => {
+  clearTimeout(timer) // 이전 타이머 취소
+  currentPage.value = 1 // 페이지 번호 1로 설정
+  timer = setTimeout(async () => {
+    const data = newVal.trim()
+      ? await fetchSearchMovies(newVal)
+      : await fetchNowPlayingMovies(currentPage.value)
+    movies.value = data.results
+    totalPages.value = data.total_pages
+  }, 300) // 0.3초 기다림
 })
 </script>
