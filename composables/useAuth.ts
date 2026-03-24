@@ -1,9 +1,7 @@
 // ===== 유저 상태 =====
 // 새로고침해도 로그인 유지 (localStorage에서 복원)
 const user = ref(
-  typeof window !== 'undefined'
-    ? JSON.parse(localStorage.getItem('currentUser') || 'null')
-    : null,
+  typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('currentUser') || 'null') : null,
 )
 
 // 로그인 여부 (user가 있으면 true)

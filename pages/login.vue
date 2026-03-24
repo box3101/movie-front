@@ -47,9 +47,9 @@
 const { signIn } = useAuth()
 
 // ===== 상태 변수 =====
-const email = ref('')       // 이메일 입력값
-const password = ref('')    // 비밀번호 입력값
-const errorMsg = ref('')    // 에러 메시지
+const email = ref('') // 이메일 입력값
+const password = ref('') // 비밀번호 입력값
+const errorMsg = ref('') // 에러 메시지
 
 // ===== 로그인 실행 =====
 const onSignIn = () => {
@@ -71,10 +71,10 @@ const onSignIn = () => {
 
   // 로그인 시도 — 실패하면 catch에서 에러 메시지 표시
   try {
-    signIn(email.value, password.value)
-    navigateTo('/')  // 성공 → 메인 페이지로 이동
+    signIn(email.value, password.value) // signIn 안에서 throw가 터졌을 때 잡힘
+    navigateTo('/') // 성공 → 메인 페이지로 이동
   } catch (e) {
-    errorMsg.value = (e as Error).message
+    errorMsg.value = e.message
   }
 }
 </script>
