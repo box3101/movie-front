@@ -142,11 +142,9 @@ onMounted(async () => {
 
 const onPageChange = async (pageNumber: number) => {
   currentPage.value = pageNumber
-  window.scrollTo({ top: 0 }) // 먼저 스크롤 올리고
-  movies.value = [] // 기존 카드 비우고 (클릭 방지)
   const data = searchQuery.value.trim()
-    ? await fetchSearchMovies(searchQuery.value, pageNumber)
-    : await fetchNowPlayingMovies(pageNumber)
+    ? await fetchSearchMovies(searchQuery.value) // 검색어 있으면 → fetchSearchMovies 호출
+    : await fetchNowPlayingMovies(pageNumber) // 검색어 없으면 → fetchNowPlayingMovies 호출
   movies.value = data.results
   totalPages.value = data.total_pages
 }
@@ -157,8 +155,8 @@ const onPageChange = async (pageNumber: number) => {
 const filteredMovies = computed(() => {
   return (
     movies.value
-      // .filter((m) => selectedGenre.value === '전체' || m.genre_ids === selectedGenre.value)
-      // .filter((m) => m.title.includes(searchQuery.value))
+      // .filter((m) => selectedGenre.value === '전체' || m.genre_ids === selectedGenre.value)searchQuery.value
+      // .filter((m) => m.title.includes())
       .sort((a, b) => {
         if (sortOrder.value === 'rating') return b.vote_average - a.vote_average
         else if (sortOrder.value === 'title') return a.title.localeCompare(b.title)
@@ -192,8 +190,8 @@ watch(searchQuery, (newVal) => {
   currentPage.value = 1 // 페이지 번호 1로 설정
   timer = setTimeout(async () => {
     const data = newVal.trim()
-      ? await fetchSearchMovies(newVal)
-      : await fetchNowPlayingMovies(currentPage.value)
+      ? await fetchSearchMovies(newVal) // 검색어 있으면 → fetchSearchMovies 호출
+      : await fetchNowPlayingMovies(currentPage.value) // 검색어 없으면 → fetchNowPlayingMovies 호출
     movies.value = data.results
     totalPages.value = data.total_pages
   }, 300) // 0.3초 기다림
