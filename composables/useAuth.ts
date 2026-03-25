@@ -28,6 +28,7 @@ const register = (name: string, email: string, password: string) => {
   // 이메일 중복 체크
   if (users.some((u: string) => u.email === email)) {
     // throw - 던져 , new - 새로만들어 , Error - 에러객체생성 (에러 메시지를 담는 상자)
+    // 에레 객체를 새로 만들어서  다른 파일로 전달
     throw new Error('이미 가입된 이메일입니다.')
   }
 

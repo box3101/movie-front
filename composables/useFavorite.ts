@@ -4,6 +4,10 @@ const favorites = ref<number[]>(
 )
 // 2. 찜 토글 함수
 const toggleFavorite = (id: number) => {
+  const { isAuthenticated } = useAuth()
+  if (!isAuthenticated.value) {
+    return navigateTo('/login')
+  }
   // favorites에 id가 있으면 → 제거 (filter)
   if (favorites.value.includes(id)) {
     favorites.value = favorites.value.filter((m) => m !== id)
