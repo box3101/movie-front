@@ -67,11 +67,11 @@
 const { register } = useAuth()
 
 // ===== 상태 변수 =====
-const name = ref('')            // 이름 입력값
-const email = ref('')           // 이메일 입력값
-const password = ref('')        // 비밀번호 입력값
+const name = ref('') // 이름 입력값
+const email = ref('') // 이메일 입력값
+const password = ref('') // 비밀번호 입력값
 const passwordConfirm = ref('') // 비밀번호 확인 입력값
-const errorMsg = ref('')        // 에러 메시지
+const errorMsg = ref('') // 에러 메시지
 
 // ===== 회원가입 실행 =====
 const onRegister = () => {
@@ -102,7 +102,7 @@ const onRegister = () => {
   // 회원가입 시도 — 이메일 중복이면 catch에서 에러 메시지 표시
   try {
     register(name.value, email.value, password.value)
-    navigateTo('/login')  // 성공 → 로그인 페이지로 이동
+    navigateTo('/login') // 성공 → 로그인 페이지로 이동
   } catch (e) {
     errorMsg.value = (e as Error).message
   }

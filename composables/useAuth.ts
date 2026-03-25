@@ -26,14 +26,14 @@ const register = (name: string, email: string, password: string) => {
   const users = JSON.parse(localStorage.getItem('users') || '[]')
 
   // 이메일 중복 체크
-  if (users.some((u) => u.email === email)) {
+  if (users.some((u: string) => u.email === email)) {
+    // throw - 던져 , new - 새로만들어 , Error - 에러객체생성 (에러 메시지를 담는 상자)
     throw new Error('이미 가입된 이메일입니다.')
   }
 
   // 새 유저 추가
   users.push({ name, email, password })
   localStorage.setItem('users', JSON.stringify(users))
-  return { name, email }
 }
 
 // ===== 로그아웃 =====
