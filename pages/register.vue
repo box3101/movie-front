@@ -104,7 +104,7 @@ const onRegister = () => {
     register(name.value, email.value, password.value)
     navigateTo('/login') // 성공 → 로그인 페이지로 이동
   } catch (e) {
-    errorMsg.value = (e as Error).message
+    errorMsg.value = e.message
   }
 }
 </script>

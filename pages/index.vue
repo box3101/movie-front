@@ -1,5 +1,19 @@
 <template>
-  <div>
+  <!-- 로딩 중 스켈레톤 -->
+  <div v-if="isLoading" class="grid grid-cols-4 gap-6">
+    <div v-for="i in 8" :key="i" class="bg-gray-800 rounded-lg overflow-hidden animate-pulse">
+      <div class="w-full h-64 bg-gray-700"></div>
+      <div class="p-3">
+        <div class="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
+        <div class="h-3 bg-gray-700 rounded w-1/2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 에러 -->
+  <p v-else-if="errorMsg" class="text-center text-red-400 py-10">{{ errorMsg }}</p>
+
+  <div v-else>
     <h2 class="text-2xl font-bold mb-6">현재 상영작</h2>
 
     <!-- /*
@@ -121,19 +135,28 @@ const selectedGenre = ref('전체') // 선택된 장르 상태 관리
 const searchQuery = ref('') // 검색 쿼리 상태 관리
 const sortOrder = ref('rating') // 정렬 순서 상태 관리
 const movies = ref([]) // API에서 받아올 영화 목록
-const isLoading = ref(true) // 로딩 상태
 const currentPage = ref(1) // 현재 페이지 번호
 const totalPages = ref(0) // 총 페이지 수
+
+// 과제 13 로딩/에러 처리
+const isLoading = ref(true) // 로딩 상태
+const errorMsg = ref('') // 에러 메시지
 
 /*
     페이지 로드 시 API 호출
 */
 
 onMounted(async () => {
-  const data = await fetchNowPlayingMovies(currentPage.value)
-  movies.value = data.results
-  totalPages.value = data.total_pages
-  isLoading.value = false
+  try {
+    // await new Promise((resolve) => setTimeout(resolve, 2000)) // ← 2초 대기 (테스트용)
+    const data = await fetchNowPlayingMovies(currentPage.value)
+    movies.value = data.results
+    totalPages.value = data.total_pages
+  } catch (error) {
+    errorMsg.value = '영화 목록을 불러오는 중 오류가 발생했습니다.'
+  } finally {
+    isLoading.value = false
+  }
 })
 
 /*
