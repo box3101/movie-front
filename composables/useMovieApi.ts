@@ -10,7 +10,7 @@ export const useMovieApi = () => {
       params: {
         api_key: apiKey, // API 키 전달
         language: 'ko-KR', // 언어 설정 ( 한국어 )
-        page: -1, // 페이지 번호
+        page: pageNumber, // 페이지 번호
       },
     })
     return data // 현재 상영작 목록 데이터 반환  ( 자동으로 URL 쿼리스트링으로 변환됨 )
@@ -45,5 +45,11 @@ export const useMovieApi = () => {
     return data // 영화검색 데이터 반환
   }
 
-  return { fetchNowPlayingMovies, fetchMovieDetail, fetchSearchMovies } // 현재 상영작 목록 조회, 영화 상세 정보 조회, 영화검색 함수 반환
+  // 여러 영화 동시 조회 (찜 목록용)
+  const fetchMoviesByIds = async (ids: number[]) => {
+    const movies = await Promise.all(ids.map((id) => fetchMovieDetail(id)))
+    return movies
+  }
+
+  return { fetchNowPlayingMovies, fetchMovieDetail, fetchSearchMovies, fetchMoviesByIds } // 현재 상영작 목록 조회, 영화 상세 정보 조회, 영화검색 함수 반환
 }

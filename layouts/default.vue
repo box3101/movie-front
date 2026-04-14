@@ -13,7 +13,7 @@
 
           <!-- 로그인 상태 -->
           <template v-if="isAuthenticated">
-            <span class="text-gray-300 text-sm">{{ user.name }}님</span>
+            <NuxtLink to="/mypage" class="text-sm text-gray-300 hover:text-red-400 transition">{{ user.name }}님</NuxtLink>
             <button @click="onLogout" class="text-sm text-gray-400 hover:text-red-400 transition">로그아웃</button>
           </template>
           <NuxtLink v-else to="/login" class="text-sm text-gray-400 hover:text-red-400 transition">로그인</NuxtLink>
